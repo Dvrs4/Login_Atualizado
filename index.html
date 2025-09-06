@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Login</title>
-    <!-- Fontes Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
@@ -22,7 +21,7 @@
             align-items: center;
             min-height: 100vh;
             width: 100%;
-            background: url('https://images.unsplash.com/photo-1593465163436-fcd7c25e21ae?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+            background: url('https://images.unsplash.com/photo-1484589065579-248aad0d8b13?q=80&w=759&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
             background-size: cover;
             position: relative;
         }
@@ -55,7 +54,7 @@
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(0px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -220,7 +219,6 @@
             text-decoration: underline;
         }
         
-        /* Animações */
         @keyframes shine {
             0% {
                 transform: rotate(45deg) translate(-50%, -50%);
@@ -230,7 +228,6 @@
             }
         }
         
-        /* Mensagem de erro */
         .error-message {
             color: #ff6b6b;
             text-align: center;
@@ -243,7 +240,6 @@
             border-left: 4px solid #ff6b6b;
         }
         
-        /* Loading animation */
         .loading {
             display: inline-block;
             width: 20px;
@@ -258,23 +254,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Credenciais de teste */
-        .test-credentials {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            border-left: 4px solid #6e8efb;
-            color: #fff;
-            font-size: 0.85em;
-        }
-        
-        .test-credentials h3 {
-            margin-bottom: 10px;
-            color: #a777e3;
-        }
-        
-        /* Responsividade */
         @media (max-width: 480px) {
             .form-box {
                 width: 90%;
@@ -290,15 +269,10 @@
                 gap: 10px;
                 align-items: flex-start;
             }
-            
-            .test-credentials {
-                display: none;
-            }
         }
     </style>
 </head>
 <body>
-    <!--- Formulário de Login -->
     <section>
         <div class="form-box">
             <div class="form-value">
@@ -321,7 +295,7 @@
                         <a href="#">Esqueceu a senha?</a>
                     </div>
                    <button type="submit">Entrar</button>
-                   <div id="error-message" class="error-message"></div>                   
+                   <div id="error-message" class="error-message"></div>
                    
                     <div class="register">
                         <p>Não tem uma conta? <a href="#">Registrar-se</a></p>
@@ -335,35 +309,28 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     
     <script>
-        // Proteção básica contra inspeção (dificulta, mas não impede totalmente)
         function enableProtection() {
-            // Desativar o menu de contexto (botão direito)
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
                 return false;
             });
             
-            // Desativar teclas de desenvolvedor (F12, Ctrl+Shift+I, etc.)
             document.addEventListener('keydown', function(e) {
-                // F12
                 if (e.keyCode === 123) {
                     e.preventDefault();
                     return false;
                 }
-                
-                // Ctrl+Shift+I
+
                 if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
                     e.preventDefault();
                     return false;
                 }
                 
-                // Ctrl+U
                 if (e.ctrlKey && e.keyCode === 85) {
                     e.preventDefault();
                     return false;
                 }
                 
-                // Ctrl+Shift+C
                 if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
                     e.preventDefault();
                     return false;
@@ -371,47 +338,42 @@
             });
         }
         
-        // Função para ofuscar strings (não é criptografia real)
-        function obscureString(str) {
-            // Esta função apenas ofusca a string, não a criptografa
-            // Em um ambiente real, você usaria uma conexão HTTPS e validação no servidor
-            return str.split('').map(char => {
-                return String.fromCharCode(char.charCodeAt(0) + 1);
-            }).join('');
+        // CREDENCIAIS VÁLIDAS - adiciona usuarios usando o formato {email: 'email', password: 'senha'},
+        const validCredentials = [
+            { email: 'admin@sistema.com', password: 'Sistema123@' },
+            { email: 'teste1@gmail.com', password: 'teste123' },
+            { email: 'teste2@gmail.com', password: 'teste123' },
+            { email: 'usuario3@exemplo.com', password: 'senha456' },
+            { email: 'usuario4@exemplo.com', password: 'senha789' },
+            { email: 'usuario5@exemplo.com', password: 'senha101' },
+            { email: 'usuario6@exemplo.com', password: 'senha202' },
+            { email: 'usuario7@exemplo.com', password: 'senha303' }
+        ];
+        
+        // Função para verificar credenciais
+        function checkCredentials(email, password) {
+            return validCredentials.some(cred => cred.email === email && cred.password === password);
         }
         
-        // Função para desofuscar strings
-        function unobscureString(str) {
-            return str.split('').map(char => {
-                return String.fromCharCode(char.charCodeAt(0) - 1);
-            }).join('');
-        }
-        
-        // Credenciais válidas (email: admin@sistema.com, senha: Sistema123@)
-        const validCredentials = {
-            email: 'gabrielly@planoassessoria.com',
-            password: 'Plano@123'
-        };
-        
-        // Função para mostrar mensagens de erro
+        // Função para exibir mensagem de erro
         function showError(message) {
             const errorElement = document.getElementById('error-message');
             errorElement.textContent = message;
             errorElement.style.display = 'block';
-            
-            // Esconder a mensagem após 5 segundos
+
+            // Ocultar mensagem de erro após 5 segundos
             setTimeout(() => {
                 errorElement.style.display = 'none';
             }, 5000);
         }
         
         document.addEventListener('DOMContentLoaded', function() {
-            // Ativar proteções
+            // Habilitar proteção contra inspeção
             enableProtection();
             
             const loginForm = document.getElementById('login-form');
             
-            // Processar o formulário de login
+            // Manipulador de envio do formulário
             loginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -419,12 +381,11 @@
                 const password = document.getElementById('password').value;
                 const rememberMe = document.getElementById('remember').checked;
                 
-                // Verificar as credenciais
-                if (email === validCredentials.email && password === validCredentials.password) {
-                    // Esconder mensagem de erro se estiver visível
+                // Verificação das credenciais
+                if (checkCredentials(email, password)) {
                     document.getElementById('error-message').style.display = 'none';
                     
-                    // Salvar se "Lembre de mim" estiver marcado
+                    // Lembrar email se a opção estiver marcada
                     if (rememberMe) {
                         localStorage.setItem('userEmail', email);
                         localStorage.setItem('rememberMe', 'true');
@@ -433,26 +394,26 @@
                         localStorage.removeItem('rememberMe');
                     }
                     
-                    // Efeito visual de login
+                    // Efeito de carregamento no botão
                     const loginButton = loginForm.querySelector('button');
                     const originalText = loginButton.innerHTML;
                     loginButton.innerHTML = '<span class="loading"></span> Entrando...';
                     loginButton.disabled = true;
                     
-                    // Simular tempo de processamento
+                    // Simular atraso de login
                     setTimeout(() => {
-                        // Redirecionar para site.html após login bem-sucedido
+                        // Redirecionar para a página principal
                         window.location.href = 'site.html';
                     }, 1500);
                 } else {
-                    // Credenciais incorretas
+                    // Credenciais inválidas
                     showError('Email ou senha incorretos. Tente novamente.');
                     document.getElementById('password').value = '';
                     document.getElementById('password').focus();
                 }
             });
             
-            // Verificar se há email lembrado
+            // Verificar se o email deve ser lembrado
             const rememberedEmail = localStorage.getItem('userEmail');
             const rememberMe = localStorage.getItem('rememberMe') === 'true';
             
