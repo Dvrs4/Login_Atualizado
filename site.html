@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gerenciamento para Óticas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 20px 0;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+        
+        .header-left h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .header-left p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-weight: 600;
+        }
+        
+        .user-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            flex-wrap: wrap;
+        }
+        
+        .tab-button {
+            padding: 18px 25px;
+            text-align: center;
+            background: #f8f9fa;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tab-button.active {
+            background: white;
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+        }
+        
+        .tab-button:hover {
+            background: #e8f4fc;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            color: #2c3e50;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            margin: 10px 0;
+        }
+        
+        .card-text {
+            color: #7f8c8d;
+            margin-top: auto;
+        }
+        
+        .catalog-item {
+            border: 1px solid #eaecef;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .catalog-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .catalog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .catalog-header h3 {
+            color: #3498db;
+        }
+        
+        .processing-date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .extracted-data p {
+            margin-bottom: 8px;
+        }
+        
+        .catalog-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        
+        .btn-view {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .btn-view:hover {
+            background-color: #27ae60;
+        }
+        
+        .btn-edit {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-extract {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-extract:hover {
+            background-color: #d35400;
+        }
+        
+        .btn-search, .btn-save {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .btn-search:hover, .btn-save:hover {
+            background-color: #8e44ad;
+        }
+        
+        .btn-details {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .btn-details:hover {
+            background-color: #2c3e50;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .search-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dce1e5;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .search-results {
+            margin-top: 25px;
+        }
+        
+        .lens-card {
+            border: 1px solid #eaecef;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: white;
+            transition: transform 0.2s ease;
+        }
+        
+        .lens-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .lens-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .lens-card p {
+            margin-bottom: 8px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            width: 85%;
+            max-width: 900px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalopen 0.4s;
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-60px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 30px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: #333;
+        }
+        
+        .edit-form, .extraction-config {
+            padding: 20px 0;
+        }
+        
+        .config-options {
+            margin-bottom: 25px;
+        }
+        
+        .config-options label {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+        
+        .config-options input {
+            margin-right: 10px;
+        }
+        
+        .custom-fields {
+            margin: 25px 0;
+        }
+        
+        .custom-field {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .custom-field input {
+            padding: 10px;
+            border: 1px solid #dce1e5;
+            border-radius: 6px;
+            flex: 1;
+        }
+        
+        .btn-remove {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 15px;
+        }
+        
+        .btn-remove:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-add-field {
+            background-color: #1abc9c;
+            color: white;
+        }
+        
+        .btn-add-field:hover {
+            background-color: #16a085;
+        }
+        
+        .catalog-viewer {
+            margin-top: 20px;
+            height: 600px;
+            border: 1px solid #eaecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .upload-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .upload-area {
+            border: 2px dashed #3498db;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 15px;
+            background: #f8f9fa;
+            transition: background-color 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            background: #e8f4fc;
+        }
+        
+        .upload-area p {
+            margin-bottom: 15px;
+            color: #7f8c8d;
+        }
+        
+        .btn-upload {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 25px;
+        }
+        
+        .btn-upload:hover {
+            background-color: #2980b9;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .client-list, .order-list {
+            margin-top: 20px;
+        }
+        
+        .client-item, .order-item {
+            border: 1px solid #eaecef;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .client-info h3, .order-info h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .client-info p, .order-info p {
+            color: #7f8c8d;
+        }
+        
+        .client-actions, .order-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaecef;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .prescription-form {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .prescription-form h4 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .report-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .report-option {
+            border: 1px solid #eaecef;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .report-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .report-option h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .report-option p {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        
+        .low-budget {
+            border-left: 4px solid #2ecc71;
+        }
+        
+        .medium-budget {
+            border-left: 4px solid #f39c12;
+        }
+        
+        .high-budget {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        @media (max-width: 900px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+            
+            .catalog-actions {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .client-item, .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .client-actions, .order-actions {
+                align-self: flex-end;
+            }
+            
+            .report-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>Sistema de Gerenciamento para Óticas</h1>
+                <p>Controle completo de catálogos, clientes e prescrições</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <div class="user-name">Davi Vieira</div>
+                    <div class="user-role">Usuario teste</div>
+                </div>
+                <i class="fas fa-user-circle" style="font-size: 2.5rem;"></i>
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('dashboard-tab')">
+                <i class="fas fa-home"></i> Dashboard
+            </button>
+            <button class="tab-button" onclick="openTab('catalog-tab')">
+                <i class="fas fa-book"></i> Catálogos
+            </button>
+            <button class="tab-button" onclick="openTab('search-tab')">
+                <i class="fas fa-search"></i> Buscar Lentes
+            </button>
+            <button class="tab-button" onclick="openTab('clients-tab')">
+                <i class="fas fa-users"></i> Clientes
+            </button>
+            <button class="tab-button" onclick="openTab('reports-tab')">
+                <i class="fas fa-chart-bar"></i> Relatórios
+            </button>
+        </div>
+        
+        <div id="dashboard-tab" class="tab-content active">
+            <h2>Dashboard</h2>
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Total de Clientes</div>
+                        <div class="card-icon" style="background-color: #e8f4fc; color: #3498db;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="card-value" id="total-clients">0</div>
+                    <div class="card-text" id="clients-update">Carregando...</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Catálogos Ativos</div>
+                        <div class="card-icon" style="background-color: #f4ecfe; color: #9b59b6;">
+                            <i class="fas fa-book"></i>
+                        </div>
+                    </div>
+                    <div class="card-value" id="total-catalogs">0</div>
+                    <div class="card-text" id="catalogs-update">Carregando...</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Lentes Disponíveis</div>
+                        <div class="card-icon" style="background-color: #fef7ec; color: #f39c12;">
+                            <i class="fas fa-glasses"></i>
+                        </div>
+                    </div>
+                    <div class="card-value" id="total-lenses">0</div>
+                    <div class="card-text">De diversos materiais e tipos</div>
+                </div>
+            </div>
+            
+            <h3>Clientes Recentes</h3>
+            <table id="recent-clients">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Data de Cadastro</th>
+                        <th>Preferência de Preço</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Conteúdo dinâmico -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="catalog-tab" class="tab-content">
+            <h2>Catálogos de Lentes</h2>
+            
+            <div class="upload-section">
+                <h3>Adicionar Novo Catálogo</h3>
+                <p>Faça upload de um catálogo em formato CSV</p>
+                <div class="upload-area">
+                    <p>Arraste e solte o arquivo CSV aqui ou</p>
+                    <input type="file" id="catalog-file" accept=".csv" style="display: none;">
+                    <button class="btn-upload" onclick="document.getElementById('catalog-file').click()">Selecionar Arquivo CSV</button>
+                    <p style="margin-top: 15px; font-size: 0.9rem;">Formato esperado: Tipo, Material, Modelo, Cor, Preço, Fabricante</p>
+                </div>
+            </div>
+            
+            <h3>Catálogos Inseridos</h3>
+            <div class="catalog-list" id="catalog-list">
+                <!-- Conteúdo dinâmico -->
+            </div>
+        </div>
+        
+        <div id="search-tab" class="tab-content">
+            <h2>Buscar Lentes</h2>
+            
+            <div class="search-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="search-lens-type">Tipo de Lente:</label>
+                        <select id="search-lens-type">
+                            <option value="">Selecione...</option>
+                            <!-- Opções preenchidas dinamicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="search-material">Material:</label>
+                        <select id="search-material">
+                            <option value="">Selecione...</option>
+                            <!-- Opções preenchidas dinamicamente -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="search-model">Modelo:</label>
+                        <select id="search-model">
+                            <option value="">Selecione...</option>
+                            <!-- Opções preenchidas dinamicamente -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="search-color">Cor:</label>
+                        <select id="search-color">
+                            <option value="">Selecione...</option>
+                            <!-- Opções preenchidas dinamicamente -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="search-min-price">Preço Mínimo:</label>
+                        <input type="number" id="search-min-price" placeholder="Ex: 100.00" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="search-max-price">Preço Máximo:</label>
+                        <input type="number" id="search-max-price" placeholder="Ex: 1000.00" min="0">
+                    </div>
+                </div>
+                
+                <button class="btn-search" onclick="searchLenses()">Buscar Lentes</button>
+            </div>
+            
+            <div id="search-results" class="search-results">
+                <!-- Resultados serão exibidos aqui -->
+            </div>
+        </div>
+        
+        <div id="clients-tab" class="tab-content">
+            <h2>Gerenciamento de Clientes</h2>
+            
+            <div class="search-form">
+                <h3>Adicionar Novo Cliente</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="client-name">Nome completo:</label>
+                        <input type="text" id="client-name" placeholder="Digite o nome do cliente">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client-phone">Telefone:</label>
+                        <input type="text" id="client-phone" placeholder="(00) 00000-0000">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="client-email">E-mail:</label>
+                        <input type="email" id="client-email" placeholder="cliente@exemplo.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="client-budget">Faixa de Preço Preferida:</label>
+                        <select id="client-budget">
+                            <option value="low">Baixo Orçamento</option>
+                            <option value="medium">Médio Orçamento</option>
+                            <option value="high">Alto Orçamento</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="prescription-form">
+                    <h4>Dados da Receita Oftalmológica</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="client-od-esf">OD Esférico:</label>
+                            <input type="text" id="client-od-esf" placeholder="Ex: -2.50">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="client-od-cil">OD Cilíndrico:</label>
+                            <input type="text" id="client-od-cil" placeholder="Ex: -0.75">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="client-od-eixo">OD Eixo:</label>
+                            <input type="text" id="client-od-eixo" placeholder="Ex: 180">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="client-oe-esf">OE Esférico:</label>
+                            <input type="text" id="client-oe-esf" placeholder="Ex: -2.25">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="client-oe-cil">OE Cilíndrico:</label>
+                            <input type="text" id="client-oe-cil" placeholder="Ex: -1.00">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="client-oe-eixo">OE Eixo:</label>
+                            <input type="text" id="client-oe-eixo" placeholder="Ex: 170">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="client-adicion">Adição:</label>
+                            <input type="text" id="client-adicion" placeholder="Ex: +1.50">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="client-dnp">Distância Naso-Pupilar (DNP):</label>
+                            <input type="text" id="client-dnp" placeholder="Ex: 62">
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn-save" onclick="addNewClient()">Salvar Cliente</button>
+            </div>
+            
+            <h3>Clientes Cadastrados</h3>
+            <div class="client-list" id="client-list">
+                <!-- Conteúdo dinâmico -->
+            </div>
+        </div>
+        
+        <div id="reports-tab" class="tab-content">
+            <h2>Relatórios de Opções para Clientes</h2>
+            
+            <div class="search-form">
+                <div class="form-group">
+                    <label for="report-client">Selecionar Cliente:</label>
+                    <select id="report-client">
+                        <option value="">Selecione um cliente...</option>
+                        <!-- Opções preenchidas dinamicamente -->
+                    </select>
+                </div>
+                
+                <button class="btn-search" onclick="generateReport()">Gerar Relatório</button>
+            </div>
+            
+            <div id="report-results">
+                <div class="report-options" id="report-options">
+                    <!-- Conteúdo dinâmico -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Sistema de Gerenciamento para Óticas &copy; 2025 - Desenvolvido para otimizar seu negócio</p>
+        </footer>
+    </div>
+
+    <script>
+        // Dados da aplicação
+        let clients = JSON.parse(localStorage.getItem('clients')) || [];
+        let catalogs = JSON.parse(localStorage.getItem('catalogs')) || [];
+        let lenses = JSON.parse(localStorage.getItem('lenses')) || [];
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboard();
+            renderCatalogs();
+            renderClients();
+            updateClientSelect();
+            initSearchFilters();
+            
+            // Configurar upload de arquivo
+            document.getElementById('catalog-file').addEventListener('change', handleCatalogUpload);
+        });
+        
+        // Função para alternar entre abas
+        function openTab(tabId) {
+            // Esconder todos os conteúdos de abas
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Desativar todos os botões de aba
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+            
+            // Ativar a aba selecionada
+            document.getElementById(tabId).classList.add('active');
+            
+            // Ativar o botão correspondente
+            event.currentTarget.classList.add('active');
+        }
+        
+        // Atualizar dashboard
+        function updateDashboard() {
+            document.getElementById('total-clients').textContent = clients.length;
+            document.getElementById('total-catalogs').textContent = catalogs.length;
+            document.getElementById('total-lenses').textContent = lenses.length;
+            
+            const now = new Date();
+            document.getElementById('clients-update').textContent = `Atualizado: ${now.toLocaleDateString()}`;
+            document.getElementById('catalogs-update').textContent = `Última atualização: ${now.toLocaleDateString()}`;
+            
+            // Clientes recentes (últimos 5)
+            const recentClients = clients.slice(-5).reverse();
+            const tbody = document.querySelector('#recent-clients tbody');
+            tbody.innerHTML = '';
+            
+            recentClients.forEach(client => {
+                const row = document.createElement('tr');
+                let budgetText = '';
+                
+                switch(client.budget) {
+                    case 'low':
+                        budgetText = 'Baixo Orçamento';
+                        break;
+                    case 'medium':
+                        budgetText = 'Médio Orçamento';
+                        break;
+                    case 'high':
+                        budgetText = 'Alto Orçamento';
+                        break;
+                }
+                
+                row.innerHTML = `
+                    <td>${client.name}</td>
+                    <td>${new Date(client.date).toLocaleDateString()}</td>
+                    <td>${budgetText}</td>
+                    <td>Ativo</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Manipular upload de catálogo
+        function handleCatalogUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                processCatalogData(content, file.name);
+            };
+            reader.readAsText(file);
+        }
+        
+        // Processar dados do catálogo
+        function processCatalogData(data, filename) {
+            const lines = data.split('\n');
+            const newLenses = [];
+            
+            // Pular cabeçalho se existir
+            let startLine = 0;
+            if (lines[0].toLowerCase().includes('tipo') || lines[0].toLowerCase().includes('material')) {
+                startLine = 1;
+            }
+            
+            for (let i = startLine; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = line.split(',');
+                if (values.length >= 5) {
+                    newLenses.push({
+                        type: values[0]?.trim() || '',
+                        material: values[1]?.trim() || '',
+                        model: values[2]?.trim() || '',
+                        color: values[3]?.trim() || '',
+                        price: parseFloat(values[4]?.trim() || 0),
+                        manufacturer: values[5]?.trim() || '',
+                        catalog: filename
+                    });
+                }
+            }
+            
+            // Adicionar às lentes existentes
+            lenses = [...lenses, ...newLenses];
+            localStorage.setItem('lenses', JSON.stringify(lenses));
+            
+            // Adicionar ao catálogo
+            const catalogId = Date.now();
+            catalogs.push({
+                id: catalogId,
+                name: filename,
+                date: new Date().toISOString(),
+                lensCount: newLenses.length
+            });
+            localStorage.setItem('catalogs', JSON.stringify(catalogs));
+            
+            // Atualizar a interface
+            renderCatalogs();
+            updateDashboard();
+            initSearchFilters();
+            
+            alert(`Catálogo importado com sucesso! ${newLenses.length} lentes adicionadas.`);
+        }
+        
+        // Renderizar catálogos
+        function renderCatalogs() {
+            const catalogList = document.getElementById('catalog-list');
+            catalogList.innerHTML = '';
+            
+            if (catalogs.length === 0) {
+                catalogList.innerHTML = '<p>Nenhum catálogo importado ainda.</p>';
+                return;
+            }
+            
+            catalogs.forEach(catalog => {
+                const catalogItem = document.createElement('div');
+                catalogItem.className = 'catalog-item';
+                catalogItem.innerHTML = `
+                    <div class="catalog-header">
+                        <h3>${catalog.name}</h3>
+                        <span class="processing-date">Processado em: ${new Date(catalog.date).toLocaleDateString()}</span>
+                    </div>
+                    <div class="extracted-data">
+                        <p><strong>Lentes no catálogo:</strong> ${catalog.lensCount}</p>
+                    </div>
+                    <div class="catalog-actions">
+                        <button class="btn-view" onclick="viewCatalog(${catalog.id})">Visualizar Catálogo</button>
+                        <button class="btn-danger" onclick="deleteCatalog(${catalog.id})">Excluir Catálogo</button>
+                    </div>
+                `;
+                catalogList.appendChild(catalogItem);
+            });
+        }
+        
+        // Visualizar catálogo
+        function viewCatalog(id) {
+            const catalog = catalogs.find(c => c.id === id);
+            if (!catalog) return;
+            
+            const catalogLenses = lenses.filter(l => l.catalog === catalog.name);
+            let content = `<h2>${catalog.name}</h2><p>Lentes encontradas: ${catalogLenses.length}</p><ul>`;
+            
+            catalogLenses.forEach(lens => {
+                content += `<li>${lens.type} - ${lens.material} - ${lens.model} - ${lens.color} - R$ ${lens.price.toFixed(2)}</li>`;
+            });
+            
+            content += '</ul>';
+            
+            alert(content); // Em uma implementação real, isso seria um modal
+        }
+        
+        // Excluir catálogo
+        function deleteCatalog(id) {
+            if (!confirm('Tem certeza que deseja excluir este catálogo? Todas as lentes associadas serão removidas.')) {
+                return;
+            }
+            
+            const catalog = catalogs.find(c => c.id === id);
+            if (!catalog) return;
+            
+            // Remover lentes associadas
+            lenses = lenses.filter(l => l.catalog !== catalog.name);
+            localStorage.setItem('lenses', JSON.stringify(lenses));
+            
+            // Remover catálogo
+            catalogs = catalogs.filter(c => c.id !== id);
+            localStorage.setItem('catalogs', JSON.stringify(catalogs));
+            
+            // Atualizar interface
+            renderCatalogs();
+            updateDashboard();
+            initSearchFilters();
+        }
+        
+        // Inicializar filtros de busca
+        function initSearchFilters() {
+            // Tipos
+            const typeSelect = document.getElementById('search-lens-type');
+            const types = [...new Set(lenses.map(l => l.type))].filter(t => t);
+            typeSelect.innerHTML = '<option value="">Selecione...</option>';
+            types.forEach(type => {
+                typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
+            });
+            
+            // Materiais
+            const materialSelect = document.getElementById('search-material');
+            const materials = [...new Set(lenses.map(l => l.material))].filter(m => m);
+            materialSelect.innerHTML = '<option value="">Selecione...</option>';
+            materials.forEach(material => {
+                materialSelect.innerHTML += `<option value="${material}">${material}</option>`;
+            });
+            
+            // Modelos
+            const modelSelect = document.getElementById('search-model');
+            const models = [...new Set(lenses.map(l => l.model))].filter(m => m);
+            modelSelect.innerHTML = '<option value="">Selecione...</option>';
+            models.forEach(model => {
+                modelSelect.innerHTML += `<option value="${model}">${model}</option>`;
+            });
+            
+            // Cores
+            const colorSelect = document.getElementById('search-color');
+            const colors = [...new Set(lenses.map(l => l.color))].filter(c => c);
+            colorSelect.innerHTML = '<option value="">Selecione...</option>';
+            colors.forEach(color => {
+                colorSelect.innerHTML += `<option value="${color}">${color}</option>`;
+            });
+        }
+        
+        // Buscar lentes
+        function searchLenses() {
+            const type = document.getElementById('search-lens-type').value;
+            const material = document.getElementById('search-material').value;
+            const model = document.getElementById('search-model').value;
+            const color = document.getElementById('search-color').value;
+            const minPrice = parseFloat(document.getElementById('search-min-price').value) || 0;
+            const maxPrice = parseFloat(document.getElementById('search-max-price').value) || Number.MAX_VALUE;
+            
+            let results = lenses;
+            
+            if (type) results = results.filter(l => l.type === type);
+            if (material) results = results.filter(l => l.material === material);
+            if (model) results = results.filter(l => l.model === model);
+            if (color) results = results.filter(l => l.color === color);
+            results = results.filter(l => l.price >= minPrice && l.price <= maxPrice);
+            
+            displayResults(results);
+        }
+        
+        // Exibir resultados da busca
+        function displayResults(results) {
+            const container = document.getElementById('search-results');
+            container.innerHTML = '';
+            
+            if (results.length === 0) {
+                container.innerHTML = '<p>Nenhuma lente encontrada com os critérios especificados.</p>';
+                return;
+            }
+            
+            results.forEach(lens => {
+                const card = document.createElement('div');
+                card.className = 'lens-card';
+                card.innerHTML = `
+                    <h3>${lens.model} - ${lens.manufacturer}</h3>
+                    <p><strong>Tipo:</strong> ${lens.type}</p>
+                    <p><strong>Material:</strong> ${lens.material}</p>
+                    <p><strong>Cor:</strong> ${lens.color}</p>
+                    <p><strong>Preço:</strong> R$ ${lens.price.toFixed(2)}</p>
+                    <p><strong>Catálogo:</strong> ${lens.catalog}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        // Adicionar novo cliente
+        function addNewClient() {
+            const name = document.getElementById('client-name').value;
+            const phone = document.getElementById('client-phone').value;
+            const email = document.getElementById('client-email').value;
+            const budget = document.getElementById('client-budget').value;
+            
+            const odEsf = document.getElementById('client-od-esf').value;
+            const odCil = document.getElementById('client-od-cil').value;
+            const odEixo = document.getElementById('client-od-eixo').value;
+            const oeEsf = document.getElementById('client-oe-esf').value;
+            const oeCil = document.getElementById('client-oe-cil').value;
+            const oeEixo = document.getElementById('client-oe-eixo').value;
+            const adicion = document.getElementById('client-adicion').value;
+            const dnp = document.getElementById('client-dnp').value;
+            
+            if (!name || !phone) {
+                alert('Por favor, preencha pelo menos o nome e telefone do cliente.');
+                return;
+            }
+            
+            const newClient = {
+                id: Date.now(),
+                name,
+                phone,
+                email,
+                budget,
+                prescription: {
+                    od: { esf: odEsf, cil: odCil, eixo: odEixo },
+                    oe: { esf: oeEsf, cil: oeCil, eixo: oeEixo },
+                    adicion,
+                    dnp
+                },
+                date: new Date().toISOString()
+            };
+            
+            clients.push(newClient);
+            localStorage.setItem('clients', JSON.stringify(clients));
+            
+            // Limpar formulário
+            document.getElementById('client-name').value = '';
+            document.getElementById('client-phone').value = '';
+            document.getElementById('client-email').value = '';
+            document.getElementById('client-od-esf').value = '';
+            document.getElementById('client-od-cil').value = '';
+            document.getElementById('client-od-eixo').value = '';
+            document.getElementById('client-oe-esf').value = '';
+            document.getElementById('client-oe-cil').value = '';
+            document.getElementById('client-oe-eixo').value = '';
+            document.getElementById('client-adicion').value = '';
+            document.getElementById('client-dnp').value = '';
+            
+            // Atualizar interface
+            renderClients();
+            updateDashboard();
+            updateClientSelect();
+            
+            alert('Cliente adicionado com sucesso!');
+        }
+        
+        // Renderizar clientes
+        function renderClients() {
+            const clientList = document.getElementById('client-list');
+            clientList.innerHTML = '';
+            
+            if (clients.length === 0) {
+                clientList.innerHTML = '<p>Nenhum cliente cadastrado ainda.</p>';
+                return;
+            }
+            
+            clients.forEach(client => {
+                let budgetText = '';
+                
+                switch(client.budget) {
+                    case 'low':
+                        budgetText = 'Baixo Orçamento';
+                        break;
+                    case 'medium':
+                        budgetText = 'Médio Orçamento';
+                        break;
+                    case 'high':
+                        budgetText = 'Alto Orçamento';
+                        break;
+                }
+                
+                const clientItem = document.createElement('div');
+                clientItem.className = 'client-item';
+                clientItem.innerHTML = `
+                    <div class="client-info">
+                        <h3>${client.name}</h3>
+                        <p>Telefone: ${client.phone} | E-mail: ${client.email || 'Não informado'}</p>
+                        <p>Preferência: ${budgetText} | Cadastro: ${new Date(client.date).toLocaleDateString()}</p>
+                    </div>
+                    <div class="client-actions">
+                        <button class="btn-view" onclick="viewClient(${client.id})">Visualizar</button>
+                        <button class="btn-edit" onclick="editClient(${client.id})">Editar</button>
+                        <button class="btn-danger" onclick="deleteClient(${client.id})">Excluir</button>
+                    </div>
+                `;
+                clientList.appendChild(clientItem);
+            });
+        }
+        
+        // Atualizar seletor de clientes para relatórios
+        function updateClientSelect() {
+            const clientSelect = document.getElementById('report-client');
+            clientSelect.innerHTML = '<option value="">Selecione um cliente...</option>';
+            
+            clients.forEach(client => {
+                clientSelect.innerHTML += `<option value="${client.id}">${client.name} - ${client.phone}</option>`;
+            });
+        }
+        
+        // Visualizar cliente
+        function viewClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (!client) return;
+            
+            let budgetText = '';
+            switch(client.budget) {
+                case 'low':
+                    budgetText = 'Baixo Orçamento';
+                    break;
+                case 'medium':
+                    budgetText = 'Médio Orçamento';
+                    break;
+                case 'high':
+                    budgetText = 'Alto Orçamento';
+                    break;
+            }
+            
+            let content = `
+                <h3>${client.name}</h3>
+                <p><strong>Telefone:</strong> ${client.phone}</p>
+                <p><strong>E-mail:</strong> ${client.email || 'Não informado'}</p>
+                <p><strong>Preferência de preço:</strong> ${budgetText}</p>
+                <p><strong>Data de cadastro:</strong> ${new Date(client.date).toLocaleDateString()}</p>
+                <h4>Receita Oftalmológica:</h4>
+                <p><strong>OD:</strong> Esf: ${client.prescription.od.esf || 'N/A'}, Cil: ${client.prescription.od.cil || 'N/A'}, Eixo: ${client.prescription.od.eixo || 'N/A'}</p>
+                <p><strong>OE:</strong> Esf: ${client.prescription.oe.esf || 'N/A'}, Cil: ${client.prescription.oe.cil || 'N/A'}, Eixo: ${client.prescription.oe.eixo || 'N/A'}</p>
+                <p><strong>Adição:</strong> ${client.prescription.adicion || 'N/A'}</p>
+                <p><strong>DNP:</strong> ${client.prescription.dnp || 'N/A'}</p>
+            `;
+            
+            alert(content); // Em uma implementação real, isso seria um modal
+        }
+        
+        // Gerar relatório para cliente
+        function generateReport() {
+            const clientId = parseInt(document.getElementById('report-client').value);
+            if (!clientId) {
+                alert('Por favor, selecione um cliente.');
+                return;
+            }
+            
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+            
+            // Filtrar lentes com base no orçamento do cliente
+            let minPrice, maxPrice;
+            
+            switch(client.budget) {
+                case 'low':
+                    minPrice = 0;
+                    maxPrice = 300;
+                    break;
+                case 'medium':
+                    minPrice = 301;
+                    maxPrice = 800;
+                    break;
+                case 'high':
+                    minPrice = 801;
+                    maxPrice = Number.MAX_VALUE;
+                    break;
+            }
+            
+            const suitableLenses = lenses.filter(l => l.price >= minPrice && l.price <= maxPrice);
+            
+            // Se não houver lentes no intervalo, expandir a busca
+            if (suitableLenses.length === 0) {
+                // Buscar lentes mais próximas do intervalo desejado
+                const allLenses = [...lenses];
+                allLenses.sort((a, b) => a.price - b.price);
+                
+                // Para orçamento baixo, pegar as mais baratas
+                if (client.budget === 'low') {
+                    suitableLenses.push(...allLenses.slice(0, Math.min(5, allLenses.length)));
+                } 
+                // Para orçamento alto, pegar as mais caras
+                else if (client.budget === 'high') {
+                    suitableLenses.push(...allLenses.slice(-Math.min(5, allLenses.length)));
+                }
+                // Para orçamento médio, pegar do meio
+                else {
+                    const midIndex = Math.floor(allLenses.length / 2);
+                    suitableLenses.push(...allLenses.slice(Math.max(0, midIndex - 2), Math.min(allLenses.length, midIndex + 3)));
+                }
+            }
+            
+            // Agrupar por tipo para exibição
+            const groupedLenses = {};
+            suitableLenses.forEach(lens => {
+                if (!groupedLenses[lens.type]) {
+                    groupedLenses[lens.type] = [];
+                }
+                groupedLenses[lens.type].push(lens);
+            });
+            
+            // Exibir relatório
+            const reportOptions = document.getElementById('report-options');
+            reportOptions.innerHTML = '';
+            
+            for (const type in groupedLenses) {
+                const typeLenses = groupedLenses[type];
+                const optionDiv = document.createElement('div');
+                
+                // Ordenar por preço
+                typeLenses.sort((a, b) => a.price - b.price);
+                
+                let budgetClass = '';
+                switch(client.budget) {
+                    case 'low':
+                        budgetClass = 'low-budget';
+                        break;
+                    case 'medium':
+                        budgetClass = 'medium-budget';
+                        break;
+                    case 'high':
+                        budgetClass = 'high-budget';
+                        break;
+                }
+                
+                optionDiv.className = `report-option ${budgetClass}`;
+                
+                let content = `<h4>${type}</h4>`;
+                content += `<p>Opções dentro da faixa de ${client.budget === 'low' ? 'baixo' : client.budget === 'medium' ? 'médio' : 'alto'} orçamento:</p>`;
+                content += '<ul>';
+                
+                typeLenses.forEach(lens => {
+                    content += `<li>${lens.material} - ${lens.model} - ${lens.color} - R$ ${lens.price.toFixed(2)}</li>`;
+                });
+                
+                content += '</ul>';
+                optionDiv.innerHTML = content;
+                reportOptions.appendChild(optionDiv);
+            }
+            
+            if (Object.keys(groupedLenses).length === 0) {
+                reportOptions.innerHTML = '<p>Nenhuma lente encontrada para as preferências deste cliente.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
